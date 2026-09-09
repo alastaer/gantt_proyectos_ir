@@ -1,0 +1,167 @@
+{
+  "projectCatalog": [
+    "Proyecto Programación ESAB"
+  ],
+  "activities": [
+    {
+      "n": 1,
+      "text": "Carga de la información de tripulantes a BigQuery (nombres y características).",
+      "start": "2026-08-23",
+      "end": "2026-08-23",
+      "status": "completado",
+      "project": "Proyecto Programación ESAB"
+    },
+    {
+      "n": 2,
+      "text": "Diseño de la solución: conectar el archivo de proyecciones (Google Sheets) con el sistema de reportes (BigQuery), de forma automática.",
+      "start": "2026-08-24",
+      "end": "2026-08-24",
+      "status": "completado",
+      "project": "Proyecto Programación ESAB"
+    },
+    {
+      "n": 3,
+      "text": "Configuración de accesos y permisos para que el proceso pueda leer el archivo y guardar resultados de forma segura.",
+      "start": "2026-08-24",
+      "end": "2026-08-24",
+      "status": "completado",
+      "project": "Proyecto Programación ESAB"
+    },
+    {
+      "n": 4,
+      "text": "Construcción y primera puesta en marcha del proceso automático de cálculo de unidades (vagones y buses).",
+      "start": "2026-08-24",
+      "end": "2026-08-24",
+      "status": "completado",
+      "project": "Proyecto Programación ESAB"
+    },
+    {
+      "n": 5,
+      "text": "Pruebas, detección y corrección de errores (formato de fechas, capacidad del sistema, alineación de datos).",
+      "start": "2026-08-24",
+      "end": "2026-08-25",
+      "status": "completado",
+      "project": "Proyecto Programación ESAB"
+    },
+    {
+      "n": 6,
+      "text": "Ajuste del proceso para que actualice solo la información futura, sin afectar ni reprocesar datos ya pasados.",
+      "start": "2026-08-25",
+      "end": "2026-08-25",
+      "status": "completado",
+      "project": "Proyecto Programación ESAB"
+    },
+    {
+      "n": 7,
+      "text": "Validación final: se confirmó que el proceso calcula y guarda correctamente la información real (743 registros de tren y 404 de bus).",
+      "start": "2026-08-25",
+      "end": "2026-08-25",
+      "status": "completado",
+      "project": "Proyecto Programación ESAB"
+    },
+    {
+      "n": 8,
+      "text": "Documentación: actualización de la guía de uso del archivo, con reglas para evitar errores al cargar datos.",
+      "start": "2026-08-25",
+      "end": "2026-08-25",
+      "status": "completado",
+      "project": "Proyecto Programación ESAB"
+    },
+    {
+      "n": 9,
+      "text": "Programar el proceso para que se ejecute solo, de forma automática, una vez por semana.",
+      "start": "2026-08-25",
+      "end": "2026-08-25",
+      "status": "completado",
+      "project": "Proyecto Programación ESAB"
+    },
+    {
+      "n": 10,
+      "text": "Actualización de la presentación (PPT) para el comité de gestión.",
+      "start": "2026-08-26",
+      "end": "2026-08-26",
+      "status": "completado",
+      "project": "Proyecto Programación ESAB"
+    },
+    {
+      "n": 11,
+      "text": "Evaluar si los reportes actuales ya permiten obtener la información real D-1 (vagones y buses con placas).",
+      "start": "2026-08-26",
+      "end": "2026-08-26",
+      "status": "completado",
+      "project": "Proyecto Programación ESAB"
+    },
+    {
+      "n": 12,
+      "text": "Reunión con Jorge Trujillo (proveedor), condicional a que el punto 11 determine que D-1 no está disponible con lo existente. Objetivo: confirmar si su algoritmo obtiene D-1 a través del servidor 39, para definir la ruta de trabajo.",
+      "start": "2026-08-26",
+      "end": "2026-08-26",
+      "status": "completado",
+      "project": "Proyecto Programación ESAB"
+    },
+    {
+      "n": 13,
+      "text": "Creación de una consulta réplica de los SP de TI para llevarlos a GCP, junto con el ticket a Rumi para iniciar la carga de estos (esta fuente solo cuenta con data de corte D-2).",
+      "start": "2026-08-27",
+      "end": "2026-08-27",
+      "status": "completado",
+      "project": "Proyecto Programación ESAB"
+    },
+    {
+      "n": 14,
+      "text": "Reunión con John Campos para evaluación de procedure/consulta en servidor de producción, con el fin de obtener la data con corte efectivo D-1.",
+      "start": "2026-09-01",
+      "end": "2026-09-01",
+      "status": "completado",
+      "project": "Proyecto Programación ESAB"
+    },
+    {
+      "n": 15,
+      "text": "Creación de ticket a TI y carga a GCP.",
+      "start": null,
+      "end": null,
+      "status": "encurso",
+      "project": "Proyecto Programación ESAB"
+    },
+    {
+      "n": 16,
+      "text": "Elaboración de Mockup de encuesta de satisfacción ESAB y presentación.",
+      "start": "2026-09-08",
+      "end": "2026-09-08",
+      "status": "completado",
+      "project": "Proyecto Programación ESAB"
+    },
+    {
+      "n": 17,
+      "text": "Actualización de CAPEX.",
+      "start": "2026-09-08",
+      "end": "2026-09-08",
+      "status": "completado",
+      "project": "Proyecto Programación ESAB"
+    },
+    {
+      "n": 18,
+      "text": "Reunión de kickoff con SINAPTIA (proveedor de solución de motor de programación automático).",
+      "start": "2026-09-09",
+      "end": "2026-09-09",
+      "status": "completado",
+      "project": "Proyecto Programación ESAB"
+    },
+    {
+      "n": 20,
+      "text": "Modificación de dashboard de seguimiento de programación ESAB y elaboración de presentación resumen.",
+      "start": "2026-09-09",
+      "end": "2026-09-10",
+      "status": "encurso",
+      "project": "Proyecto Programación ESAB"
+    },
+    {
+      "n": 21,
+      "text": "Modificación de input de información de la nueva encuesta de satisfacción ESAB - TBD",
+      "start": "2026-09-14",
+      "end": "2026-09-15",
+      "status": "pendiente",
+      "project": "Proyecto Programación ESAB"
+    }
+  ]
+}

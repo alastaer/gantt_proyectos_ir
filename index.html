@@ -1,0 +1,853 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Avance del proyecto — Cálculo automático de unidades / Programación ESAB</title>
+<style>
+  :root{
+    --bg:#f7f3ec;
+    --paper:#fffdf9;
+    --ink:#1e2a22;
+    --ink-soft:#5a6a5f;
+    --green:#1f4e3d;
+    --green-dark:#16382a;
+    --gold:#b08d3e;
+    --gold-soft:#efe4c8;
+    --line:#ddd6c4;
+    --line-strong:#bdb495;
+    --teal:#2f6f5e;
+    --tan:#c9a227;
+    --rust:#c1793e;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+    padding:28px 24px 60px;
+  }
+  .wrap{max-width:1500px;margin:0 auto;}
+  .eyebrow{
+    font-size:12px;
+    font-weight:700;
+    letter-spacing:.04em;
+    color:var(--gold);
+    text-transform:uppercase;
+  }
+  h1{
+    font-size:26px;
+    margin:4px 0 4px;
+    color:var(--green-dark);
+  }
+  .subtitle{
+    font-size:13.5px;
+    color:var(--ink-soft);
+    font-style:italic;
+    margin:0 0 18px;
+  }
+  .toolbar{
+    display:flex;
+    flex-wrap:wrap;
+    gap:10px;
+    align-items:center;
+    margin-bottom:18px;
+    justify-content:space-between;
+  }
+  .legend{
+    display:flex;
+    flex-wrap:wrap;
+    gap:16px;
+    background:var(--paper);
+    border:1px solid var(--line);
+    border-radius:8px;
+    padding:12px 16px;
+    font-size:12.5px;
+  }
+  .legend-item{display:flex;align-items:center;gap:6px;}
+  .legend-dot{width:10px;height:10px;border-radius:2px;display:inline-block;}
+  .btn{
+    font-size:13px;
+    font-weight:600;
+    padding:9px 16px;
+    border-radius:6px;
+    border:1px solid var(--line-strong);
+    background:#fff;
+    color:var(--ink);
+    cursor:pointer;
+  }
+  .btn:hover{border-color:var(--green);}
+  .btn-primary{
+    background:var(--green);
+    color:#fff;
+    border-color:var(--green);
+  }
+  .btn-primary:hover{background:var(--green-dark);}
+  .btn-primary:disabled{opacity:.6;cursor:not-allowed;}
+  .btn-group{display:flex;gap:8px;}
+  .summary{
+    display:grid;
+    grid-template-columns:repeat(5,1fr);
+    gap:10px;
+    margin-bottom:20px;
+  }
+  .summary-card{
+    background:var(--paper);
+    border:1px solid var(--line);
+    border-radius:8px;
+    padding:12px 14px;
+    text-align:center;
+  }
+  .summary-card .num{font-size:22px;font-weight:700;color:var(--green-dark);}
+  .summary-card .lbl{font-size:11px;color:var(--ink-soft);margin-top:2px;}
+
+  .panel{
+    background:var(--paper);
+    border:1px solid var(--line);
+    border-radius:8px;
+    padding:16px 18px;
+    margin-bottom:20px;
+  }
+  .panel h2{
+    font-size:14px;
+    margin:0 0 12px;
+    color:var(--green-dark);
+  }
+  .panel > .hint{
+    font-size:11.5px;
+    color:var(--ink-soft);
+    margin:8px 0 0;
+    line-height:1.5;
+  }
+  .tag-manager{
+    display:flex;
+    align-items:center;
+    flex-wrap:wrap;
+    gap:8px;
+  }
+  .tag-chip{
+    display:inline-flex;
+    align-items:center;
+    gap:6px;
+    background:var(--gold-soft);
+    border:1px solid var(--gold);
+    color:var(--green-dark);
+    border-radius:14px;
+    padding:4px 6px 4px 10px;
+    font-size:12px;
+    font-weight:600;
+  }
+  .tag-chip button{
+    background:none;border:none;color:var(--rust);cursor:pointer;font-size:13px;
+    line-height:1;padding:0 2px;
+  }
+  .tag-add{
+    display:flex;
+    gap:8px;
+    align-items:center;
+    margin-left:auto;
+  }
+  .tag-add input{
+    font-size:13px;
+    padding:7px 10px;
+    border:1px solid var(--line-strong);
+    border-radius:6px;
+    font-family:inherit;
+    min-width:220px;
+  }
+  .tag-empty{font-size:12.5px;color:var(--ink-soft);font-style:italic;}
+
+  .gh-form{
+    display:grid;
+    grid-template-columns:1fr 1fr 0.7fr 1fr;
+    gap:10px;
+  }
+  .gh-form-token{
+    display:grid;
+    grid-template-columns:2fr auto auto;
+    gap:10px;
+    margin-top:10px;
+  }
+  .gh-form input{
+    font-size:13px;
+    padding:8px 10px;
+    border:1px solid var(--line-strong);
+    border-radius:6px;
+    font-family:inherit;
+    width:100%;
+  }
+  .gh-status{
+    margin:10px 0 0;
+    font-size:12.5px;
+    font-weight:600;
+  }
+  .gh-status.ok{color:var(--green);}
+  .gh-status.err{color:var(--rust);}
+  .gh-status.busy{color:var(--gold);}
+
+  .add-form{
+    display:grid;
+    grid-template-columns:1.7fr 1.3fr 1fr 1fr 1fr auto;
+    gap:10px;
+    align-items:end;
+  }
+  .add-form label{
+    font-size:11px;
+    font-weight:600;
+    color:var(--ink-soft);
+    display:block;
+    margin-bottom:4px;
+  }
+  .add-form input, .add-form select{
+    width:100%;
+    font-size:13px;
+    padding:8px 10px;
+    border:1px solid var(--line-strong);
+    border-radius:6px;
+    font-family:inherit;
+  }
+  @media (max-width: 1000px){
+    .add-form{grid-template-columns:1fr 1fr;}
+    .gh-form{grid-template-columns:1fr 1fr;}
+  }
+
+  .section-title{
+    font-size:14px;
+    font-weight:700;
+    color:var(--green-dark);
+    margin:0 0 10px;
+  }
+
+  .grid-scroll{
+    overflow-x:auto;
+    border:1px solid var(--line);
+    border-radius:8px;
+    background:var(--paper);
+  }
+  .grid-row{
+    display:grid;
+    align-items:stretch;
+  }
+  .grid-header{
+    background:var(--green-dark);
+    color:#fff;
+    position:sticky;
+    top:0;
+    z-index:2;
+  }
+  .grid-header > div{
+    padding:10px 6px;
+    text-align:center;
+    font-size:11.5px;
+    border-right:1px solid rgba(255,255,255,.12);
+  }
+  .grid-header .colhead{
+    display:flex;
+    align-items:center;
+    padding-left:10px;
+    font-weight:700;
+    text-align:left;
+  }
+  .day-label{display:flex;flex-direction:column;line-height:1.25;}
+  .day-label .day-num{font-size:13px;font-weight:700;}
+  .day-label .day-name{font-size:9px;opacity:.85;}
+  .day-label.today{background:rgba(255,255,255,.18);}
+
+  .project-banner{
+    background:var(--gold-soft);
+    border-top:2px solid var(--gold);
+    border-bottom:1px solid var(--gold);
+  }
+  .project-banner-inner{
+    padding:9px 14px;
+    font-size:13px;
+    font-weight:700;
+    color:var(--green-dark);
+    display:flex;
+    align-items:center;
+    gap:10px;
+  }
+  .project-banner-stats{
+    font-weight:500;
+    font-size:11.5px;
+    color:var(--ink-soft);
+  }
+
+  .row{border-top:1px solid var(--line);}
+  .row:nth-child(odd){background:#fbf8f1;}
+  .row > div{
+    padding:10px 6px;
+    font-size:12.5px;
+    border-right:1px solid var(--line);
+    display:flex;
+    align-items:center;
+    min-height:44px;
+  }
+  .cell-n{justify-content:center;color:var(--ink-soft);font-weight:600;}
+  .cell-text{padding-left:10px !important;}
+  .cell-status select{
+    width:100%;
+    font-size:11.5px;
+    padding:5px 6px;
+    border:1px solid var(--line-strong);
+    border-radius:5px;
+    font-family:inherit;
+    background:#fff;
+  }
+  .daycell{
+    justify-content:center;
+    padding:4px !important;
+    position:relative;
+  }
+  .bar{
+    height:20px;
+    width:100%;
+    border-radius:4px;
+  }
+  .bar-start{border-top-left-radius:4px;border-bottom-left-radius:4px;margin-left:3px;}
+  .bar-end{border-top-right-radius:4px;border-bottom-right-radius:4px;margin-right:3px;}
+  .nodate{
+    font-size:11px;
+    color:var(--gold);
+    font-style:italic;
+  }
+  .del-btn{
+    background:none;border:none;color:var(--rust);cursor:pointer;font-size:15px;
+    padding:0 6px;
+  }
+
+  .status-completado{background:var(--green);}
+  .status-encurso{background:var(--teal);}
+  .status-pendiente{background:var(--tan);}
+  .status-condicional{background:var(--gold);}
+  .status-bloqueado{background:var(--rust);}
+
+  .footer-note{
+    margin-top:16px;
+    font-size:11.5px;
+    color:var(--ink-soft);
+    text-align:right;
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="eyebrow">Inca Rail · Transformación Digital</div>
+  <h1>Avance del proyecto: Cálculo automático de unidades y Programación ESAB</h1>
+  <p class="subtitle" id="subtitle-range">Cargando datos desde GitHub…</p>
+
+  <div class="toolbar">
+    <div class="legend">
+      <div class="legend-item"><span class="legend-dot status-completado"></span>Completado</div>
+      <div class="legend-item"><span class="legend-dot status-encurso"></span>En curso</div>
+      <div class="legend-item"><span class="legend-dot status-pendiente"></span>Pendiente</div>
+      <div class="legend-item"><span class="legend-dot status-condicional"></span>Condicional</div>
+      <div class="legend-item"><span class="legend-dot status-bloqueado"></span>Bloqueado</div>
+    </div>
+    <div class="btn-group">
+      <button class="btn" id="btn-reload">🔄 Recargar desde GitHub</button>
+      <button class="btn btn-primary" id="btn-save">💾 Guardar cambios en GitHub</button>
+    </div>
+  </div>
+
+  <div class="summary" id="summary"></div>
+
+  <div class="panel">
+    <h2>⚙️ Configuración de GitHub (necesaria solo para guardar cambios)</h2>
+    <div class="gh-form">
+      <input id="gh-owner" placeholder="Usuario u organización" />
+      <input id="gh-repo" placeholder="Nombre del repositorio" />
+      <input id="gh-branch" placeholder="Rama (ej. main)" value="main" />
+      <input id="gh-path" placeholder="Ruta del archivo" value="gantt-data.json" />
+    </div>
+    <div class="gh-form-token">
+      <input id="gh-token" type="password" placeholder="Personal Access Token (fine-grained, solo Contents: Read and write)" />
+      <button class="btn" id="btn-gh-save-config">Guardar configuración</button>
+      <button class="btn" id="btn-gh-clear-config">Borrar token</button>
+    </div>
+    <p class="hint">
+      El token se guarda solo en este navegador (localStorage), nunca se sube al repositorio. Genera uno en
+      GitHub → Settings → Developer settings → Personal access tokens → Fine-grained tokens, dando acceso
+      únicamente a este repositorio y permiso "Contents: Read and write". Sin esto configurado, puedes seguir
+      viendo y editando en pantalla, pero el botón "Guardar cambios en GitHub" no podrá confirmar el commit.
+    </p>
+    <p class="gh-status" id="gh-status"></p>
+  </div>
+
+  <div class="panel">
+    <h2>Proyectos disponibles</h2>
+    <div class="tag-manager" id="tag-manager"></div>
+  </div>
+
+  <div class="panel">
+    <h2>Añadir actividad</h2>
+    <div class="add-form">
+      <div>
+        <label for="f-texto">Actividad</label>
+        <input id="f-texto" type="text" placeholder="Descripción de la actividad" />
+      </div>
+      <div>
+        <label for="f-proyecto">Proyecto</label>
+        <select id="f-proyecto"></select>
+      </div>
+      <div>
+        <label for="f-inicio">Fecha inicio</label>
+        <input id="f-inicio" type="date" />
+      </div>
+      <div>
+        <label for="f-fin">Fecha fin (opcional)</label>
+        <input id="f-fin" type="date" />
+      </div>
+      <div>
+        <label for="f-estado">Estado</label>
+        <select id="f-estado">
+          <option value="pendiente">Pendiente</option>
+          <option value="encurso">En curso</option>
+          <option value="completado">Completado</option>
+          <option value="condicional">Condicional</option>
+          <option value="bloqueado">Bloqueado</option>
+        </select>
+      </div>
+      <div>
+        <button class="btn btn-primary" id="btn-add">+ Agregar</button>
+      </div>
+    </div>
+  </div>
+
+  <p class="section-title">Cronograma <span style="font-weight:400;font-size:12px;color:var(--ink-soft);">(no se muestran sábados ni domingos · agrupado por proyecto)</span></p>
+  <div class="grid-scroll">
+    <div id="grid-container"></div>
+  </div>
+
+  <p class="footer-note" id="footer-note"></p>
+</div>
+
+<!-- Datos de respaldo: solo se usan si gantt-data.json no pudo cargarse (ej. abierto como archivo local) -->
+<script type="application/json" id="fallback-data">
+{"projectCatalog":["Proyecto Programación ESAB"],"activities":[
+  {"n":1,"text":"Carga de la información de tripulantes a BigQuery (nombres y características).","start":"2026-08-23","end":"2026-08-23","status":"completado","project":"Proyecto Programación ESAB"},
+  {"n":2,"text":"Diseño de la solución: conectar el archivo de proyecciones (Google Sheets) con el sistema de reportes (BigQuery), de forma automática.","start":"2026-08-24","end":"2026-08-24","status":"completado","project":"Proyecto Programación ESAB"},
+  {"n":3,"text":"Configuración de accesos y permisos para que el proceso pueda leer el archivo y guardar resultados de forma segura.","start":"2026-08-24","end":"2026-08-24","status":"completado","project":"Proyecto Programación ESAB"},
+  {"n":4,"text":"Construcción y primera puesta en marcha del proceso automático de cálculo de unidades (vagones y buses).","start":"2026-08-24","end":"2026-08-24","status":"completado","project":"Proyecto Programación ESAB"},
+  {"n":5,"text":"Pruebas, detección y corrección de errores (formato de fechas, capacidad del sistema, alineación de datos).","start":"2026-08-24","end":"2026-08-25","status":"completado","project":"Proyecto Programación ESAB"},
+  {"n":6,"text":"Ajuste del proceso para que actualice solo la información futura, sin afectar ni reprocesar datos ya pasados.","start":"2026-08-25","end":"2026-08-25","status":"completado","project":"Proyecto Programación ESAB"},
+  {"n":7,"text":"Validación final: se confirmó que el proceso calcula y guarda correctamente la información real (743 registros de tren y 404 de bus).","start":"2026-08-25","end":"2026-08-25","status":"completado","project":"Proyecto Programación ESAB"},
+  {"n":8,"text":"Documentación: actualización de la guía de uso del archivo, con reglas para evitar errores al cargar datos.","start":"2026-08-25","end":"2026-08-25","status":"completado","project":"Proyecto Programación ESAB"},
+  {"n":9,"text":"Programar el proceso para que se ejecute solo, de forma automática, una vez por semana.","start":"2026-08-25","end":"2026-08-25","status":"completado","project":"Proyecto Programación ESAB"},
+  {"n":10,"text":"Actualización de la presentación (PPT) para el comité de gestión.","start":"2026-08-26","end":"2026-08-26","status":"completado","project":"Proyecto Programación ESAB"},
+  {"n":11,"text":"Evaluar si los reportes actuales ya permiten obtener la información real D-1 (vagones y buses con placas).","start":"2026-08-26","end":"2026-08-26","status":"completado","project":"Proyecto Programación ESAB"},
+  {"n":12,"text":"Reunión con Jorge Trujillo (proveedor), condicional a que el punto 11 determine que D-1 no está disponible con lo existente. Objetivo: confirmar si su algoritmo obtiene D-1 a través del servidor 39, para definir la ruta de trabajo.","start":"2026-08-26","end":"2026-08-26","status":"completado","project":"Proyecto Programación ESAB"},
+  {"n":13,"text":"Creación de una consulta réplica de los SP de TI para llevarlos a GCP, junto con el ticket a Rumi para iniciar la carga de estos (esta fuente solo cuenta con data de corte D-2).","start":"2026-08-27","end":"2026-08-27","status":"completado","project":"Proyecto Programación ESAB"},
+  {"n":14,"text":"Reunión con John Campos para evaluación de procedure/consulta en servidor de producción, con el fin de obtener la data con corte efectivo D-1.","start":"2026-09-01","end":"2026-09-01","status":"completado","project":"Proyecto Programación ESAB"},
+  {"n":15,"text":"Creación de ticket a TI y carga a GCP.","start":null,"end":null,"status":"encurso","project":"Proyecto Programación ESAB"},
+  {"n":16,"text":"Elaboración de Mockup de encuesta de satisfacción ESAB y presentación.","start":"2026-09-08","end":"2026-09-08","status":"completado","project":"Proyecto Programación ESAB"},
+  {"n":17,"text":"Actualización de CAPEX.","start":"2026-09-08","end":"2026-09-08","status":"completado","project":"Proyecto Programación ESAB"},
+  {"n":18,"text":"Reunión de kickoff con SINAPTIA (proveedor de solución de motor de programación automático).","start":"2026-09-09","end":"2026-09-09","status":"completado","project":"Proyecto Programación ESAB"},
+  {"n":20,"text":"Modificación de dashboard de seguimiento de programación ESAB y elaboración de presentación resumen.","start":"2026-09-09","end":"2026-09-10","status":"encurso","project":"Proyecto Programación ESAB"},
+  {"n":21,"text":"Modificación de input de información de la nueva encuesta de satisfacción ESAB - TBD","start":"2026-09-14","end":"2026-09-15","status":"pendiente","project":"Proyecto Programación ESAB"}
+]}
+</script>
+
+<script>
+const STATUS_LABEL = {
+  completado:"Completado", encurso:"En curso", pendiente:"Pendiente",
+  condicional:"Condicional", bloqueado:"Bloqueado"
+};
+const STATUS_CLASS = {
+  completado:"status-completado", encurso:"status-encurso", pendiente:"status-pendiente",
+  condicional:"status-condicional", bloqueado:"status-bloqueado"
+};
+const DAY_NAMES_ES = ["Dom","Lun","Mar","Mié","Jue","Vie","Sáb"];
+const MONTH_NAMES_ES = ["enero","febrero","marzo","abril","mayo","junio","julio","agosto","septiembre","octubre","noviembre","diciembre"];
+const SIN_PROYECTO = "Sin proyecto asignado";
+const LS_PREFIX = "gantt-gh-";
+
+function escapeHtml(s){
+  return String(s).replace(/[&<>"']/g, function(c){
+    return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c];
+  });
+}
+function parseISO(s){
+  const parts = s.split("-").map(Number);
+  return new Date(parts[0], parts[1]-1, parts[2]);
+}
+function toISO(dt){
+  const y=dt.getFullYear(), m=String(dt.getMonth()+1).padStart(2,"0"), d=String(dt.getDate()).padStart(2,"0");
+  return y+"-"+m+"-"+d;
+}
+function addDays(dt, n){
+  const c = new Date(dt);
+  c.setDate(c.getDate()+n);
+  return c;
+}
+function fmtLong(dt){
+  return dt.getDate()+" de "+MONTH_NAMES_ES[dt.getMonth()]+" de "+dt.getFullYear();
+}
+function isWeekend(dt){
+  const dow = dt.getDay();
+  return dow === 0 || dow === 6;
+}
+function utf8ToBase64(str){
+  return btoa(unescape(encodeURIComponent(str)));
+}
+function base64ToUtf8(str){
+  return decodeURIComponent(escape(atob(str)));
+}
+
+let activities = [];
+let projectCatalog = [];
+let nextN = 1;
+let currentSha = null; // sha del archivo gantt-data.json en GitHub, para poder actualizarlo
+
+// ---------- Configuración de GitHub (localStorage) ----------
+function loadGhConfig(){
+  return {
+    owner: localStorage.getItem(LS_PREFIX+"owner") || "",
+    repo: localStorage.getItem(LS_PREFIX+"repo") || "",
+    branch: localStorage.getItem(LS_PREFIX+"branch") || "main",
+    path: localStorage.getItem(LS_PREFIX+"path") || "gantt-data.json",
+    token: localStorage.getItem(LS_PREFIX+"token") || "",
+  };
+}
+function saveGhConfig(cfg){
+  localStorage.setItem(LS_PREFIX+"owner", cfg.owner);
+  localStorage.setItem(LS_PREFIX+"repo", cfg.repo);
+  localStorage.setItem(LS_PREFIX+"branch", cfg.branch);
+  localStorage.setItem(LS_PREFIX+"path", cfg.path);
+  if(cfg.token) localStorage.setItem(LS_PREFIX+"token", cfg.token);
+}
+function fillGhForm(){
+  const cfg = loadGhConfig();
+  document.getElementById("gh-owner").value = cfg.owner;
+  document.getElementById("gh-repo").value = cfg.repo;
+  document.getElementById("gh-branch").value = cfg.branch;
+  document.getElementById("gh-path").value = cfg.path;
+  // el token NUNCA se vuelve a mostrar en el input, solo se sabe si existe
+  document.getElementById("gh-token").placeholder = cfg.token
+    ? "•••••••• (token guardado — deja en blanco para conservarlo)"
+    : "Personal Access Token (fine-grained, solo Contents: Read and write)";
+}
+function setGhStatus(msg, kind){
+  const el = document.getElementById("gh-status");
+  el.textContent = msg;
+  el.className = "gh-status" + (kind ? " "+kind : "");
+}
+
+document.getElementById("btn-gh-save-config").addEventListener("click", function(){
+  const cfg = {
+    owner: document.getElementById("gh-owner").value.trim(),
+    repo: document.getElementById("gh-repo").value.trim(),
+    branch: document.getElementById("gh-branch").value.trim() || "main",
+    path: document.getElementById("gh-path").value.trim() || "gantt-data.json",
+    token: document.getElementById("gh-token").value.trim(),
+  };
+  if(!cfg.owner || !cfg.repo){
+    setGhStatus("Completa al menos usuario/organización y repositorio.", "err");
+    return;
+  }
+  saveGhConfig(cfg);
+  document.getElementById("gh-token").value = "";
+  fillGhForm();
+  setGhStatus("Configuración guardada en este navegador.", "ok");
+});
+document.getElementById("btn-gh-clear-config").addEventListener("click", function(){
+  if(!confirm("¿Borrar el token guardado en este navegador?")) return;
+  localStorage.removeItem(LS_PREFIX+"token");
+  fillGhForm();
+  setGhStatus("Token borrado.", "ok");
+});
+
+// ---------- Carga de datos ----------
+async function loadData(){
+  try{
+    const res = await fetch("./gantt-data.json", {cache:"no-store"});
+    if(!res.ok) throw new Error("status "+res.status);
+    const json = await res.json();
+    activities = json.activities || [];
+    projectCatalog = json.projectCatalog || [];
+    document.getElementById("subtitle-range").textContent = "Datos cargados desde gantt-data.json.";
+  } catch(err){
+    const fb = JSON.parse(document.getElementById("fallback-data").textContent);
+    activities = fb.activities;
+    projectCatalog = fb.projectCatalog;
+    document.getElementById("subtitle-range").textContent =
+      "No se pudo cargar gantt-data.json (¿lo abriste como archivo local? usa un servidor local o GitHub Pages) — mostrando datos de respaldo incluidos en el HTML.";
+  }
+  activities.forEach(function(a){ if(!a.project) a.project = null; });
+  nextN = 1 + activities.reduce(function(m,a){return Math.max(m,a.n);}, 0);
+}
+
+// intenta obtener el sha actual del archivo en GitHub (necesario para poder sobrescribirlo)
+async function fetchCurrentSha(cfg){
+  const url = "https://api.github.com/repos/"+cfg.owner+"/"+cfg.repo+"/contents/"+cfg.path+"?ref="+encodeURIComponent(cfg.branch);
+  const res = await fetch(url, {
+    headers: { "Authorization": "token "+cfg.token, "Accept": "application/vnd.github+json" }
+  });
+  if(res.status === 404) return null;
+  if(!res.ok) throw new Error("No se pudo leer el archivo actual en GitHub (status "+res.status+")");
+  const json = await res.json();
+  return json.sha;
+}
+
+// ---------- Render ----------
+function computeDayRange(){
+  const dated = activities.filter(function(a){return a.start && a.end;});
+  const todayISO = toISO(new Date());
+  let starts = dated.map(function(a){return parseISO(a.start);});
+  let ends = dated.map(function(a){return parseISO(a.end);});
+  starts.push(parseISO(todayISO));
+  ends.push(parseISO(todayISO));
+  const min = new Date(Math.min.apply(null, starts));
+  const max = new Date(Math.max.apply(null, ends));
+  const days = [];
+  let cur = new Date(min);
+  while(cur <= max){
+    if(!isWeekend(cur)){ days.push(toISO(cur)); }
+    cur = addDays(cur,1);
+  }
+  return days;
+}
+
+function groupByProject(){
+  const groups = {};
+  const order = [];
+  activities.forEach(function(a){
+    const key = a.project || SIN_PROYECTO;
+    if(!groups[key]){ groups[key]=[]; order.push(key); }
+    groups[key].push(a);
+  });
+  order.sort(function(x,y){
+    if(x===SIN_PROYECTO) return 1;
+    if(y===SIN_PROYECTO) return -1;
+    return 0;
+  });
+  return order.map(function(k){ return {project:k, items:groups[k]}; });
+}
+
+function renderProjectManager(){
+  const box = document.getElementById("tag-manager");
+  let html = "";
+  if(projectCatalog.length===0){
+    html += '<span class="tag-empty">Aún no hay proyectos definidos.</span>';
+  } else {
+    projectCatalog.forEach(function(tag, i){
+      html += '<span class="tag-chip">'+escapeHtml(tag)+'<button data-tag-idx="'+i+'" class="tag-del" title="Eliminar proyecto">✕</button></span>';
+    });
+  }
+  html += '<span class="tag-add"><input type="text" id="f-tag-nueva" placeholder="Nuevo proyecto"/><button class="btn" id="btn-tag-add">+ Agregar proyecto</button></span>';
+  box.innerHTML = html;
+
+  box.querySelectorAll(".tag-del").forEach(function(btn){
+    btn.addEventListener("click", function(e){
+      const i = Number(e.target.dataset.tagIdx);
+      const proj = projectCatalog[i];
+      if(confirm('¿Eliminar el proyecto "'+proj+'"? Las actividades asignadas quedarán como "'+SIN_PROYECTO+'".')){
+        projectCatalog.splice(i,1);
+        activities.forEach(function(a){ if(a.project===proj) a.project = null; });
+        renderAll();
+      }
+    });
+  });
+  document.getElementById("btn-tag-add").addEventListener("click", function(){
+    const input = document.getElementById("f-tag-nueva");
+    const val = input.value.trim();
+    if(!val) return;
+    if(projectCatalog.includes(val)){ alert("Ese proyecto ya existe."); return; }
+    projectCatalog.push(val);
+    renderAll();
+  });
+}
+
+function renderProjectSelect(){
+  const sel = document.getElementById("f-proyecto");
+  const prevVal = sel.value;
+  sel.innerHTML = projectCatalog.map(function(p){
+    return '<option value="'+escapeHtml(p)+'">'+escapeHtml(p)+'</option>';
+  }).join("");
+  if(projectCatalog.includes(prevVal)) sel.value = prevVal;
+}
+
+function renderAll(){
+  renderProjectManager();
+  renderProjectSelect();
+
+  const days = computeDayRange();
+  const todayISO = toISO(new Date());
+
+  const first = parseISO(days[0]), last = parseISO(days[days.length-1]);
+  document.getElementById("subtitle-range").textContent =
+    "Resumen de actividades del "+fmtLong(first)+" al "+fmtLong(last)+" (días hábiles). Cambia el estado o agrega nuevas actividades abajo.";
+
+  const counts = {completado:0, encurso:0, pendiente:0, condicional:0, bloqueado:0};
+  activities.forEach(function(a){ counts[a.status] = (counts[a.status]||0)+1; });
+  const total = activities.length;
+  const pct = total ? Math.round(100*counts.completado/total) : 0;
+  const summary = document.getElementById("summary");
+  summary.innerHTML =
+    '<div class="summary-card"><div class="num">'+pct+'%</div><div class="lbl">Avance completado</div></div>'+
+    '<div class="summary-card"><div class="num">'+counts.completado+'</div><div class="lbl">Completadas</div></div>'+
+    '<div class="summary-card"><div class="num">'+counts.encurso+'</div><div class="lbl">En curso</div></div>'+
+    '<div class="summary-card"><div class="num">'+counts.pendiente+'</div><div class="lbl">Pendientes</div></div>'+
+    '<div class="summary-card"><div class="num">'+(counts.bloqueado+counts.condicional)+'</div><div class="lbl">Bloqueadas / condicionales</div></div>';
+
+  const container = document.getElementById("grid-container");
+  const nCols = days.length;
+  const templateCols = "40px 340px repeat("+nCols+",44px) 140px";
+  const groups = groupByProject();
+
+  let html = '<div class="grid-row grid-header" style="grid-template-columns:'+templateCols+'">';
+  html += '<div class="colhead">#</div><div class="colhead">Actividad</div>';
+  days.forEach(function(iso){
+    const dt = parseISO(iso);
+    const isToday = iso === todayISO;
+    html += '<div class="day-label'+(isToday?' today':'')+'"><span class="day-num">'+dt.getDate()+'</span><span class="day-name">'+DAY_NAMES_ES[dt.getDay()]+'</span></div>';
+  });
+  html += '<div class="colhead">Estado</div></div>';
+
+  groups.forEach(function(g){
+    const gTotal = g.items.length;
+    const gDone = g.items.filter(function(a){return a.status==="completado";}).length;
+    const gPct = gTotal ? Math.round(100*gDone/gTotal) : 0;
+    html += '<div class="grid-row project-banner" style="grid-template-columns:1fr">'+
+      '<div class="project-banner-inner">'+escapeHtml(g.project)+
+      '<span class="project-banner-stats">'+gDone+'/'+gTotal+' completadas · '+gPct+'%</span>'+
+      '</div></div>';
+
+    g.items.forEach(function(a){
+      const idx = activities.indexOf(a);
+      html += '<div class="grid-row row" style="grid-template-columns:'+templateCols+'">';
+      html += '<div class="cell-n">'+a.n+'</div>';
+      html += '<div class="cell-text">'+escapeHtml(a.text)+'</div>';
+
+      if(a.start && a.end){
+        const s = parseISO(a.start), e = parseISO(a.end);
+        days.forEach(function(iso){
+          const d = parseISO(iso);
+          const inRange = d>=s && d<=e;
+          let cls = "";
+          if(inRange){ cls = STATUS_CLASS[a.status] || "status-pendiente"; }
+          const isStart = inRange && iso===a.start;
+          const isEnd = inRange && iso===a.end;
+          html += '<div class="daycell">'+(inRange ? '<div class="bar '+cls+' '+(isStart?'bar-start':'')+' '+(isEnd?'bar-end':'')+'"></div>' : "")+'</div>';
+        });
+      } else {
+        days.forEach(function(iso, i){
+          html += '<div class="daycell">'+(i===0 ? '<span class="nodate">Fecha por definir</span>' : "")+'</div>';
+        });
+      }
+
+      html += '<div class="cell-status">'+
+        '<select data-idx="'+idx+'" class="status-select">'+
+        Object.keys(STATUS_LABEL).map(function(k){return '<option value="'+k+'" '+(a.status===k?"selected":"")+'>'+STATUS_LABEL[k]+'</option>';}).join("")+
+        '</select>'+
+        '<button class="del-btn" data-idx="'+idx+'" title="Eliminar actividad">✕</button>'+
+        '</div>';
+      html += '</div>';
+    });
+  });
+
+  container.innerHTML = html;
+
+  container.querySelectorAll(".status-select").forEach(function(sel){
+    sel.addEventListener("change", function(e){
+      const idx = Number(e.target.dataset.idx);
+      activities[idx].status = e.target.value;
+      renderAll();
+    });
+  });
+  container.querySelectorAll(".del-btn").forEach(function(btn){
+    btn.addEventListener("click", function(e){
+      const idx = Number(e.target.dataset.idx);
+      if(confirm('¿Eliminar la actividad "'+activities[idx].text+'"?')){
+        activities.splice(idx,1);
+        renderAll();
+      }
+    });
+  });
+
+  document.getElementById("footer-note").textContent =
+    "Inca Rail · Transformación Digital — actualizado el "+fmtLong(new Date());
+}
+
+document.getElementById("btn-add").addEventListener("click", function(){
+  const texto = document.getElementById("f-texto").value.trim();
+  const proyecto = document.getElementById("f-proyecto").value;
+  const inicio = document.getElementById("f-inicio").value;
+  let fin = document.getElementById("f-fin").value;
+  const estado = document.getElementById("f-estado").value;
+
+  if(!texto){ alert("Escribe una descripción para la actividad."); return; }
+  if(!proyecto){ alert("Selecciona (o crea arriba) un proyecto para la actividad."); return; }
+  if(!inicio){ alert("Selecciona al menos la fecha de inicio."); return; }
+  if(!fin) fin = inicio;
+  if(fin < inicio){ alert("La fecha fin no puede ser anterior a la fecha de inicio."); return; }
+
+  activities.push({ n: nextN++, text: texto, start: inicio, end: fin, status: estado, project: proyecto });
+
+  document.getElementById("f-texto").value = "";
+  document.getElementById("f-inicio").value = "";
+  document.getElementById("f-fin").value = "";
+  document.getElementById("f-estado").value = "pendiente";
+
+  renderAll();
+});
+
+// ---------- Guardar en GitHub ----------
+document.getElementById("btn-save").addEventListener("click", async function(){
+  const cfg = loadGhConfig();
+  if(!cfg.owner || !cfg.repo || !cfg.token){
+    setGhStatus("Falta configurar owner/repo/token arriba antes de poder guardar.", "err");
+    window.scrollTo({top:0, behavior:"smooth"});
+    return;
+  }
+  const btn = document.getElementById("btn-save");
+  btn.disabled = true;
+  setGhStatus("Guardando en GitHub…", "busy");
+  try{
+    const sha = await fetchCurrentSha(cfg);
+    const payload = { projectCatalog, activities };
+    const content = utf8ToBase64(JSON.stringify(payload, null, 2));
+    const url = "https://api.github.com/repos/"+cfg.owner+"/"+cfg.repo+"/contents/"+cfg.path;
+    const body = {
+      message: "Actualizar cronograma — "+new Date().toISOString(),
+      content: content,
+      branch: cfg.branch
+    };
+    if(sha) body.sha = sha;
+    const res = await fetch(url, {
+      method: "PUT",
+      headers: {
+        "Authorization": "token "+cfg.token,
+        "Accept": "application/vnd.github+json",
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(body)
+    });
+    if(!res.ok){
+      const err = await res.json().catch(function(){return {};});
+      throw new Error(err.message || ("Error al guardar (status "+res.status+")"));
+    }
+    setGhStatus("✅ Guardado en GitHub. GitHub Pages puede tardar uno o dos minutos en reflejarlo para otros visitantes.", "ok");
+  } catch(err){
+    setGhStatus("❌ "+err.message, "err");
+  } finally {
+    btn.disabled = false;
+  }
+});
+
+document.getElementById("btn-reload").addEventListener("click", async function(){
+  if(!confirm("Esto reemplaza lo que ves en pantalla por la última versión guardada en GitHub. ¿Continuar?")) return;
+  await loadData();
+  renderAll();
+});
+
+// ---------- Arranque ----------
+(async function init(){
+  fillGhForm();
+  await loadData();
+  renderAll();
+})();
+</script>
+</body>
+</html>
